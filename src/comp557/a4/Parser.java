@@ -26,7 +26,7 @@ public class Parser {
             float x = s.nextFloat();
             float y = s.nextFloat();
             float z = s.nextFloat();
-            scene.ambient.set(x, y, z);   
+            scene.ambient.set(x, y, z);
             s.close();
         }
         NodeList nodeList = dataNode.getChildNodes();

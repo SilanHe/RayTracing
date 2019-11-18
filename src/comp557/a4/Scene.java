@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.vecmath.Color3f;
+import javax.vecmath.Point3d;
+import javax.vecmath.Vector3d;
 
 /**
  * Simple scene loader based on XML file format.
@@ -31,6 +33,11 @@ public class Scene {
     }
     
     /**
+     * my changes
+     */
+    private double[] offset = {0.5 ,0.5};
+    
+    /**
      * renders the scene
      */
     public void render(boolean showPanel) {
@@ -45,6 +52,8 @@ public class Scene {
             for ( int i = 0; i < w && !render.isDone(); i++ ) {
             	
                 // TODO: Objective 1: generate a ray (use the generateRay method)
+            	Ray ray = new Ray();
+            	generateRay(i,j,this.offset,cam,ray);
             	
                 // TODO: Objective 2: test for intersection with scene surfaces
             	
@@ -82,8 +91,35 @@ public class Scene {
      */
 	public static void generateRay(final int i, final int j, final double[] offset, final Camera cam, Ray ray) {
 		
-		// TODO: Objective 1: generate rays given the provided parmeters
+		// TODO: Objective 1: generate rays given the provided parameters
 		
+		// set d to 1 for simplicity
+		
+		// get the FOV
+		double verticalFOV = 2 * 1 * Math.tan(cam.fovy/2);
+		double horizontalFOV = verticalFOV * cam.imageSize.getWidth()/cam.imageSize.getHeight();
+		
+		// get the pixel to image mapping
+		double u = -horizontalFOV/2 + horizontalFOV * (i + offset[0]) / cam.imageSize.getWidth();
+		double v = -verticalFOV/2 + verticalFOV * (j + offset[1]) / cam.imageSize.getHeight();
+		
+		//convert the mapping to world coordinates
+		Vector3d lookTowards = new Vector3d();
+		lookTowards.sub(cam.to, cam.from);
+		
+		Vector3d horizontal = new Vector3d();
+		horizontal.cross(lookTowards, cam.up);
+		
+		Vector3d vertical = new Vector3d();
+		vertical.cross(horizontal,lookTowards);
+		
+		Vector3d rayDirection = new Vector3d();
+		rayDirection.set(lookTowards);
+		rayDirection.scale(u, horizontal);
+		rayDirection.scale(v, vertical);
+		
+		// update ray
+		ray.set(cam.from, rayDirection);
 	}
 
 	/**
