@@ -39,6 +39,8 @@ public class Sphere extends Intersectable {
     public void intersect( Ray ray, IntersectResult result ) {
     
         // TODO: Objective 2: intersection of ray with sphere
+    	
+    	// find t using the quadratic formula
     	Vector3d d = new Vector3d(ray.eyePoint);
     	
     	double dDotP = d.dot(ray.viewDirection);
@@ -50,10 +52,15 @@ public class Sphere extends Intersectable {
     	
     	result.t = Math.max(t,t2);
     	
+    	// find intersection point using t
     	Point3d ray_intersection = new Point3d(ray.eyePoint);
     	ray_intersection.scaleAdd(result.t, ray.viewDirection);
     	
-    	// still need to find unit normal to the surface interection
+    	result.p.set(ray_intersection);
+    	
+    	// still need to find unit normal to the surface intersection point
+    	
+    	
     }
     
 }
