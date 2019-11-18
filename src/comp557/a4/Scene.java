@@ -109,14 +109,17 @@ public class Scene {
 		
 		Vector3d horizontal = new Vector3d();
 		horizontal.cross(lookTowards, cam.up);
+		horizontal.scale(u);
 		
 		Vector3d vertical = new Vector3d();
 		vertical.cross(horizontal,lookTowards);
+		vertical.scale(v);
 		
 		Vector3d rayDirection = new Vector3d();
 		rayDirection.set(lookTowards);
-		rayDirection.scale(u, horizontal);
-		rayDirection.scale(v, vertical);
+		rayDirection.add(horizontal);
+		rayDirection.add(vertical);
+		rayDirection.scale(1);
 		
 		// update ray
 		ray.set(cam.from, rayDirection);

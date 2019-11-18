@@ -1,6 +1,7 @@
 package comp557.a4;
 
 import javax.vecmath.Point3d;
+import javax.vecmath.Vector3d;
 
 /**
  * A simple sphere class.
@@ -38,7 +39,21 @@ public class Sphere extends Intersectable {
     public void intersect( Ray ray, IntersectResult result ) {
     
         // TODO: Objective 2: intersection of ray with sphere
-	
+    	Vector3d d = new Vector3d(ray.eyePoint);
+    	
+    	double dDotP = d.dot(ray.viewDirection);
+    	double dDotD = d.dot(d);
+    	double pDotP = ray.viewDirection.dot(ray.viewDirection);
+    	
+    	double t = (-dDotP + Math.sqrt(dDotP * dDotP - dDotD * (pDotP - 1)))/dDotD;
+    	double t2 = (-dDotP - Math.sqrt(dDotP * dDotP - dDotD * (pDotP - 1)))/dDotD;
+    	
+    	result.t = Math.max(t,t2);
+    	
+    	Point3d ray_intersection = new Point3d(ray.eyePoint);
+    	ray_intersection.scaleAdd(result.t, ray.viewDirection);
+    	
+    	// still need to find unit normal to the surface interection
     }
     
 }
