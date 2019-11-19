@@ -1,5 +1,6 @@
 package comp557.a4;
 
+import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
 
 /**
@@ -28,6 +29,63 @@ public class Plane extends Intersectable {
     public void intersect( Ray ray, IntersectResult result ) {
     
         // TODO: Objective 4: intersection of ray with plane
+    	
+    	double t = - ray.eyePoint.y / ray.viewDirection.y;
+    	
+    	if (t > 0) {
+    		// there is intersection
+    		
+    		result.t = t;
+    		
+    		// find intersection point using t
+        	Point3d ray_intersection = new Point3d(ray.eyePoint);
+        	Vector3d viewIntersect = new Vector3d(ray.viewDirection);
+        	viewIntersect.scale(result.t);
+        	
+        	ray_intersection.add(viewIntersect);
+        	
+        	result.p.set(ray_intersection);
+        	
+        	// set normal
+        	
+        	result.n.set(this.n);
+        	
+        	// set material
+        	
+        	// find closest center
+        	Point3d closestCenter = new Point3d();
+        	closestCenter.x = Math.round(result.p.x);
+        	closestCenter.y = Math.round(result.p.y);
+        	closestCenter.z = Math.round(result.p.z);
+        	
+        	//get quadrant information
+        	Vector3d quadrant = new Vector3d();
+        	quadrant.sub(result.p, closestCenter);
+        	
+        	// if material2 exists
+        	if (this.material2 != null) {
+        		if (quadrant.x >= 0) {
+            		if (quadrant.z >= 0) {
+            			//material 1
+            			result.material = this.material;
+            		} else {
+            			//material 2
+            			result.material = this.material2;
+            		}
+            	} else {
+            		if (quadrant.z >= 0) {
+            			//material 2
+            			result.material = this.material2;
+            		} else {
+            			//material 1
+            			result.material = this.material;
+            		}
+            	}
+        	} else {
+        		//if material 2 does not exist, default
+        		result.material = this.material;
+        	}        	
+    	}
     	
     }
     

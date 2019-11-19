@@ -62,15 +62,18 @@ public class Scene {
             	Ray ray = new Ray();
             	generateRay(i,j,this.offset,cam,ray);
             	
-                // TODO: Objective 2: test for intersection with scene surfaces
+                // TODO: Objective 2: test for intersection with scene surfaces, get closest intersection
             	
             	IntersectResult intersectResult = new IntersectResult();
             	
             	for (Intersectable surface : surfaceList) {
-            		surface.intersect(ray, intersectResult);
+            		IntersectResult tempResult = new IntersectResult();
+            		surface.intersect(ray, tempResult);
             		
-            		if (intersectResult.t < Double.POSITIVE_INFINITY) {
-            			break;
+            		// get closest intersection
+                	
+            		if (tempResult.t < intersectResult.t) {
+            			intersectResult = tempResult;
             		}
             	}
             	
