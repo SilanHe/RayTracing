@@ -53,19 +53,14 @@ public class Plane extends Intersectable {
         	// set material
         	
         	// find closest center
-        	Point3d closestCenter = new Point3d();
-        	closestCenter.x = Math.round(result.p.x);
-        	closestCenter.y = Math.round(result.p.y);
-        	closestCenter.z = Math.round(result.p.z);
-        	
-        	//get quadrant information
-        	Vector3d quadrant = new Vector3d();
-        	quadrant.sub(result.p, closestCenter);
+        	Point3d quadrant = new Point3d();
+        	quadrant.x = ((result.p.x % 2) + 2) % 2;
+        	quadrant.z = ((result.p.z % 2) + 2) % 2;
         	
         	// if material2 exists
         	if (this.material2 != null) {
-        		if (quadrant.x >= 0) {
-            		if (quadrant.z >= 0) {
+        		if (quadrant.x >= 1) {
+            		if (quadrant.z >= 1) {
             			//material 1
             			result.material = this.material;
             		} else {
@@ -73,7 +68,7 @@ public class Plane extends Intersectable {
             			result.material = this.material2;
             		}
             	} else {
-            		if (quadrant.z >= 0) {
+            		if (quadrant.z >= 1) {
             			//material 2
             			result.material = this.material2;
             		} else {
