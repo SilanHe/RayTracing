@@ -51,6 +51,13 @@ public class Scene {
         for ( int j = 0; j < h && !render.isDone(); j++ ) {
             for ( int i = 0; i < w && !render.isDone(); i++ ) {
             	
+            	
+            	// used to debug
+            	if ((i == w/2-20 || i == w/2 + 20) && j == h/2-30) {
+            		int x = 0;
+            		x = 1;
+            	}
+            	
                 // TODO: Objective 1: generate a ray (use the generateRay method)
             	Ray ray = new Ray();
             	generateRay(i,j,this.offset,cam,ray);
@@ -58,11 +65,6 @@ public class Scene {
                 // TODO: Objective 2: test for intersection with scene surfaces
             	
             	IntersectResult intersectResult = new IntersectResult();
-            	
-            	if (i == w/2 && j == 0) {
-            		int x = 0;
-            		x = 1;
-            	}
             	
             	for (Intersectable surface : surfaceList) {
             		surface.intersect(ray, intersectResult);
@@ -72,31 +74,68 @@ public class Scene {
             		}
             	}
             	
-            	// Here is an example of how to calculate the pixel value.
+            	
+//            	if (intersectResult.t < Double.POSITIVE_INFINITY) {
+//            		  r = (int)(255);
+//            		  g = 0;
+//            		  b = 0;
+//            		  argb = (a<<24 | r<<16 | g<<8 | b);	  
+//        		} 
+            	
+                // TODO: Objective 3: compute the shaded result for the intersection point (perhaps requiring shadow rays)
+                
             	Color3f c = new Color3f(render.bgcolor);
+            	
+            	if (intersectResult.t < Double.POSITIVE_INFINITY) {
+            		for (Map.Entry<String,Light> mapElement : lights.entrySet()) { 
+                        String key = (String)mapElement.getKey(); 
+                        Light light = (Light)mapElement.getValue();
+                        
+                        // ambient
+                        
+                        c.set(this.ambient);
+                        
+                        // diffuse lambertian
+                        Vector3d lightFrom = new Vector3d();
+                        lightFrom.sub(light.from,intersectResult.p);
+                        lightFrom.normalize();
+                        
+                        double nDotL = Math.max(0, intersectResult.n.dot(lightFrom));
+                        
+                        c.x += intersectResult.material.diffuse.x * Math.pow(light.color.x,light.power) * nDotL;
+                        c.y += intersectResult.material.diffuse.y * Math.pow(light.color.y,light.power) * nDotL;
+                        c.z += intersectResult.material.diffuse.z * Math.pow(light.color.z,light.power) * nDotL;
+                        
+                        //specular blinn phong
+                        
+                        Vector3d lookFrom = new Vector3d();
+                        lookFrom.sub(cam.from, intersectResult.p);
+                        lookFrom.normalize();
+                        
+                        Vector3d h_bisector = new Vector3d();
+                        h_bisector.add(lightFrom, lookFrom);
+                        h_bisector.normalize();
+                        
+                        double nDotH = Math.pow(Math.max(0, intersectResult.n.dot(h_bisector)),intersectResult.material.shinyness);
+                        
+                        c.x += intersectResult.material.specular.x * Math.pow(light.color.x,light.power) * nDotH;
+                        c.y += intersectResult.material.specular.y * Math.pow(light.color.y,light.power) * nDotH;
+                        c.z += intersectResult.material.specular.z * Math.pow(light.color.z,light.power) * nDotH;
+                    
+                        // note light also has a field called power, not using it yet
+                	}
+            	}
+            	
+            	// Here is an example of how to calculate the pixel value.
+            	
+            	c.scale(1/render.samples);
+            	c.clamp(0, 1);
+            	
             	int r = (int)(255*c.x);
                 int g = (int)(255*c.y);
                 int b = (int)(255*c.z);
                 int a = 255;
                 int argb = (a<<24 | r<<16 | g<<8 | b);
-            	
-            	if (intersectResult.t < Double.POSITIVE_INFINITY) {
-            		  r = (int)(255);
-            		  g = 0;
-            		  b = 0;
-            		  argb = (a<<24 | r<<16 | g<<8 | b);	  
-        		} 
-            	
-                // TODO: Objective 3: compute the shaded result for the intersection point (perhaps requiring shadow rays)
-                
-            	double LRed = 0;
-            	double LGreen = 0;
-            	double LBlue = 0;
-            	
-            	for (Map.Entry<String,Light> mapElement : lights.entrySet()) { 
-                    String key = (String)mapElement.getKey(); 
-                    Light light = (Light)mapElement.getValue();
-                } 
             	  
                 
                 // update the render image
@@ -127,11 +166,6 @@ public class Scene {
 		
 		// set d to 1 for simplicity
 		
-		if (i == cam.imageSize.width/2 && j == cam.imageSize.height-1) {
-			int x = 0;
-			x = 1;
-		}
-		
 		// get the FOV
 		double verticalFOV = 2 * Math.tan(cam.fovy/2);
 		double horizontalFOV = verticalFOV * cam.imageSize.getWidth()/cam.imageSize.getHeight();
@@ -147,12 +181,15 @@ public class Scene {
 		Vector3d horizontal = new Vector3d();
 		horizontal.cross(lookTowards, cam.up);
 		horizontal.normalize();
-		horizontal.scale(u);
+		
 		
 		Vector3d vertical = new Vector3d();
 		vertical.cross(horizontal,lookTowards);
 		vertical.normalize();
+		
+		
 		vertical.scale(v);
+		horizontal.scale(u);
 		
 		Vector3d rayDirection = new Vector3d();
 		rayDirection.set(lookTowards);

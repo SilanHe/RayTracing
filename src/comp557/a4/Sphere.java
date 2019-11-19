@@ -53,27 +53,38 @@ public class Sphere extends Intersectable {
     	
     	if (discriminant >= 0) {
     		double t = (-b - Math.sqrt(discriminant))/ (2.0 * a);
-    		if (t > 0.0) {
-    			result.t =  t;
+    		double t2 = (-b + Math.sqrt(discriminant))/ (2.0 * a);
+    		
+    		if (t < t2) {
+    			if (t > 0) {
+    				result.t = t;
+    			} else {
+    				result.t = t2;
+    			}
     		} else {
-    			t = (-b + Math.sqrt(discriminant))/ (2.0 * a);
-    			result.t =  t;
+    			if (t2 > 0) {
+    				result.t = t2;
+    			} else {
+    				result.t = t;
+    			}
     		}
-    		// not sure if i need to check if t is positive again
     	}
     	
     	if (result.t < Double.POSITIVE_INFINITY) {
     		
     		// find intersection point using t
         	Point3d ray_intersection = new Point3d(ray.eyePoint);
-        	ray_intersection.scaleAdd(result.t, ray.viewDirection);
+        	Vector3d viewIntersect = new Vector3d(ray.viewDirection);
+        	viewIntersect.scale(result.t);
+        	
+        	ray_intersection.add(viewIntersect);
         	
         	result.p.set(ray_intersection);
         	
         	// set the normal of the intersection at the point with respect to the surface of sphere
         	
         	Vector3d normalIntersection = new Vector3d();
-        	normalIntersection.set(result.p.x - this.center.x, result.p.y - this.center.y, result.p.z - this.center.z);
+        	normalIntersection.set(2*(result.p.x - this.center.x), 2*(result.p.y - this.center.y), 2*(result.p.z - this.center.z));
         	normalIntersection.normalize();
         	
         	result.n.set(normalIntersection);
