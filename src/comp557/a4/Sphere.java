@@ -41,24 +41,46 @@ public class Sphere extends Intersectable {
         // TODO: Objective 2: intersection of ray with sphere
     	
     	// find t using the quadratic formula
-    	Vector3d d = new Vector3d(ray.eyePoint);
+    	Vector3d d = new Vector3d(ray.viewDirection);
+    	Vector3d aMinusC = new Vector3d();
+    	aMinusC.sub(ray.eyePoint, this.center);
     	
-    	double dDotP = d.dot(ray.viewDirection);
-    	double dDotD = d.dot(d);
-    	double pDotP = ray.viewDirection.dot(ray.viewDirection);
+    	double a = d.dot(ray.viewDirection);
+    	double b = 2 * d.dot(aMinusC);
+    	double c = aMinusC.dot(aMinusC) - this.radius * this.radius;
     	
-    	double t = (-dDotP + Math.sqrt(dDotP * dDotP - dDotD * (pDotP - 1)))/dDotD;
-    	double t2 = (-dDotP - Math.sqrt(dDotP * dDotP - dDotD * (pDotP - 1)))/dDotD;
+    	double discriminant = b * b - 4 * a * c;
     	
-    	result.t = Math.max(t,t2);
+    	if (discriminant >= 0) {
+    		double t = (-b - Math.sqrt(discriminant))/ (2.0 * a);
+    		if (t > 0.0) {
+    			result.t =  t;
+    		} else {
+    			t = (-b + Math.sqrt(discriminant))/ (2.0 * a);
+    			result.t =  t;
+    		}
+    		// not sure if i need to check if t is positive again
+    	}
     	
-    	// find intersection point using t
-    	Point3d ray_intersection = new Point3d(ray.eyePoint);
-    	ray_intersection.scaleAdd(result.t, ray.viewDirection);
-    	
-    	result.p.set(ray_intersection);
-    	
-    	// still need to find unit normal to the surface intersection point
+    	if (result.t < Double.POSITIVE_INFINITY) {
+    		
+    		// find intersection point using t
+        	Point3d ray_intersection = new Point3d(ray.eyePoint);
+        	ray_intersection.scaleAdd(result.t, ray.viewDirection);
+        	
+        	result.p.set(ray_intersection);
+        	
+        	// set the normal of the intersection at the point with respect to the surface of sphere
+        	
+        	Vector3d normalIntersection = new Vector3d();
+        	normalIntersection.set(result.p.x - this.center.x, result.p.y - this.center.y, result.p.z - this.center.z);
+        	normalIntersection.normalize();
+        	
+        	result.n.set(normalIntersection);
+        	
+        	// set the material
+        	result.material = this.material;
+    	}
     	
     	
     }

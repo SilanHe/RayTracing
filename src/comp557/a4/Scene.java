@@ -57,15 +57,47 @@ public class Scene {
             	
                 // TODO: Objective 2: test for intersection with scene surfaces
             	
-                // TODO: Objective 3: compute the shaded result for the intersection point (perhaps requiring shadow rays)
-                
+            	IntersectResult intersectResult = new IntersectResult();
+            	
+            	if (i == w/2 && j == 0) {
+            		int x = 0;
+            		x = 1;
+            	}
+            	
+            	for (Intersectable surface : surfaceList) {
+            		surface.intersect(ray, intersectResult);
+            		
+            		if (intersectResult.t < Double.POSITIVE_INFINITY) {
+            			break;
+            		}
+            	}
+            	
             	// Here is an example of how to calculate the pixel value.
             	Color3f c = new Color3f(render.bgcolor);
             	int r = (int)(255*c.x);
                 int g = (int)(255*c.y);
                 int b = (int)(255*c.z);
                 int a = 255;
-                int argb = (a<<24 | r<<16 | g<<8 | b);    
+                int argb = (a<<24 | r<<16 | g<<8 | b);
+            	
+            	if (intersectResult.t < Double.POSITIVE_INFINITY) {
+            		  r = (int)(255);
+            		  g = 0;
+            		  b = 0;
+            		  argb = (a<<24 | r<<16 | g<<8 | b);	  
+        		} 
+            	
+                // TODO: Objective 3: compute the shaded result for the intersection point (perhaps requiring shadow rays)
+                
+            	double LRed = 0;
+            	double LGreen = 0;
+            	double LBlue = 0;
+            	
+            	for (Map.Entry<String,Light> mapElement : lights.entrySet()) { 
+                    String key = (String)mapElement.getKey(); 
+                    Light light = (Light)mapElement.getValue();
+                } 
+            	  
                 
                 // update the render image
                 render.setPixel(i, j, argb);
@@ -95,13 +127,18 @@ public class Scene {
 		
 		// set d to 1 for simplicity
 		
+		if (i == cam.imageSize.width/2 && j == cam.imageSize.height-1) {
+			int x = 0;
+			x = 1;
+		}
+		
 		// get the FOV
-		double verticalFOV = 2 * 1 * Math.tan(cam.fovy/2);
+		double verticalFOV = 2 * Math.tan(cam.fovy/2);
 		double horizontalFOV = verticalFOV * cam.imageSize.getWidth()/cam.imageSize.getHeight();
 		
 		// get the pixel to image mapping
 		double u = -horizontalFOV/2 + horizontalFOV * (i + offset[0]) / cam.imageSize.getWidth();
-		double v = -verticalFOV/2 + verticalFOV * (j + offset[1]) / cam.imageSize.getHeight();
+		double v = verticalFOV/2 - verticalFOV * (j + offset[1]) / cam.imageSize.getHeight();
 		
 		//convert the mapping to world coordinates
 		Vector3d lookTowards = new Vector3d();
@@ -109,17 +146,20 @@ public class Scene {
 		
 		Vector3d horizontal = new Vector3d();
 		horizontal.cross(lookTowards, cam.up);
+		horizontal.normalize();
 		horizontal.scale(u);
 		
 		Vector3d vertical = new Vector3d();
 		vertical.cross(horizontal,lookTowards);
+		vertical.normalize();
 		vertical.scale(v);
 		
 		Vector3d rayDirection = new Vector3d();
 		rayDirection.set(lookTowards);
+		rayDirection.normalize();
 		rayDirection.add(horizontal);
 		rayDirection.add(vertical);
-		rayDirection.scale(1);
+		rayDirection.normalize();
 		
 		// update ray
 		ray.set(cam.from, rayDirection);
