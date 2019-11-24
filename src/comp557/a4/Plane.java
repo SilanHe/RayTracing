@@ -57,22 +57,23 @@ public class Plane extends Intersectable {
         	quadrant.x = ((result.p.x % 2) + 2) % 2;
         	quadrant.z = ((result.p.z % 2) + 2) % 2;
         	
+        	// why are the instructions inversed 
         	// if material2 exists
         	if (this.material2 != null) {
         		if (quadrant.x >= 1) {
             		if (quadrant.z >= 1) {
-            			//material 1
+            			//material 2
             			result.material = this.material;
             		} else {
-            			//material 2
+            			//material 1
             			result.material = this.material2;
             		}
             	} else {
             		if (quadrant.z >= 1) {
-            			//material 2
+            			//material 1
             			result.material = this.material2;
             		} else {
-            			//material 1
+            			//material 2
             			result.material = this.material;
             		}
             	}

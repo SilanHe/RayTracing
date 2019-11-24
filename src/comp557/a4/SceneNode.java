@@ -64,11 +64,11 @@ public class SceneNode extends Intersectable {
     	tmpResult.n.set(0, 0, 1);
         for ( Intersectable s : children ) {
             s.intersect( tmpRay, tmpResult );
-        }
-        if ( tmpResult.t > 1e-9 && tmpResult.t < result.t ) {
+            if ( tmpResult.t > 1e-9 && tmpResult.t < result.t ) {
 
-        	// TODO: do something useful here!
-        
+            	result.set(tmpResult);
+            
+            }
         }
     }
     

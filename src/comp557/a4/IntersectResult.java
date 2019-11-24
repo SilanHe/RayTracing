@@ -37,4 +37,15 @@ public class IntersectResult {
 		material = other.material;
 	}
 	
+	/**
+	 * Copy method.
+	 * @param other
+	 */
+	public void set (IntersectResult other){
+		n.set( other.n );
+		p.set( other.p );
+		t = other.t;
+		material = other.material;
+	}
+	
 }

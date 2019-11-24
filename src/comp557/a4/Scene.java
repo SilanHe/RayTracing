@@ -53,7 +53,7 @@ public class Scene {
             	
             	
             	// used to debug
-            	if ((i == w/2-20 || i == w/2 + 20) && j == h/2-30) {
+            	if ((i == w/2-50) && j == h/2+80) {
             		int x = 0;
             		x = 1;
             	}
@@ -73,65 +73,78 @@ public class Scene {
             		// get closest intersection
                 	
             		if (tempResult.t < intersectResult.t) {
-            			intersectResult = tempResult;
+            			intersectResult.set(tempResult);
             		}
             	}
-            	
-            	
-//            	if (intersectResult.t < Double.POSITIVE_INFINITY) {
-//            		  r = (int)(255);
-//            		  g = 0;
-//            		  b = 0;
-//            		  argb = (a<<24 | r<<16 | g<<8 | b);	  
-//        		} 
             	
                 // TODO: Objective 3: compute the shaded result for the intersection point (perhaps requiring shadow rays)
                 
             	Color3f c = new Color3f(render.bgcolor);
             	
+            	
             	if (intersectResult.t < Double.POSITIVE_INFINITY) {
-            		for (Map.Entry<String,Light> mapElement : lights.entrySet()) { 
-                        String key = (String)mapElement.getKey(); 
+            		
+            		// ambient
+                    
+                    c.x = this.ambient.x * intersectResult.material.diffuse.x;
+                    c.y = this.ambient.y * intersectResult.material.diffuse.y;
+                    c.z = this.ambient.z * intersectResult.material.diffuse.z;
+            		
+        			for (Map.Entry<String,Light> mapElement : lights.entrySet()) {  
                         Light light = (Light)mapElement.getValue();
                         
-                        // ambient
+                        // test if in shadow with respect to this light
                         
-                        c.set(this.ambient);
-                        
-                        // diffuse lambertian
-                        Vector3d lightFrom = new Vector3d();
-                        lightFrom.sub(light.from,intersectResult.p);
-                        lightFrom.normalize();
-                        
-                        double nDotL = Math.max(0, intersectResult.n.dot(lightFrom));
-                        
-                        c.x += intersectResult.material.diffuse.x * Math.pow(light.color.x,light.power) * nDotL;
-                        c.y += intersectResult.material.diffuse.y * Math.pow(light.color.y,light.power) * nDotL;
-                        c.z += intersectResult.material.diffuse.z * Math.pow(light.color.z,light.power) * nDotL;
-                        
-                        //specular blinn phong
-                        
-                        Vector3d lookFrom = new Vector3d();
-                        lookFrom.sub(cam.from, intersectResult.p);
-                        lookFrom.normalize();
-                        
-                        Vector3d h_bisector = new Vector3d();
-                        h_bisector.add(lightFrom, lookFrom);
-                        h_bisector.normalize();
-                        
-                        double nDotH = Math.pow(Math.max(0, intersectResult.n.dot(h_bisector)),intersectResult.material.shinyness);
-                        
-                        c.x += intersectResult.material.specular.x * Math.pow(light.color.x,light.power) * nDotH;
-                        c.y += intersectResult.material.specular.y * Math.pow(light.color.y,light.power) * nDotH;
-                        c.z += intersectResult.material.specular.z * Math.pow(light.color.z,light.power) * nDotH;
-                    
-                        // note light also has a field called power, not using it yet
-                	}
+                        // do shadow rays first
+	                    Ray shadowRay = new Ray();
+	                    generateShadowRay(intersectResult,light,shadowRay);
+	                    IntersectResult shadowResult = new IntersectResult();
+	                    
+	                    // test if the shadow ray hits light first
+	                    for (Intersectable surface : surfaceList) {
+	                		IntersectResult tempResult = new IntersectResult();
+	                		surface.intersect(shadowRay, tempResult);
+	                		
+	                		// get closest intersection
+	                    	
+	                		if (tempResult.t < shadowResult.t) {
+	                			shadowResult.set(tempResult);
+	                		}
+	                	}
+	                    
+	                    if (!inShadow(intersectResult,light,null,shadowResult,shadowRay)) {
+		                    // diffuse lambertian
+	                        Vector3d lightFrom = new Vector3d();
+	                        lightFrom.sub(light.from,intersectResult.p);
+	                        lightFrom.normalize();
+	                        
+	                        double nDotL = Math.max(0, intersectResult.n.dot(lightFrom));
+	                        
+	                        c.x += intersectResult.material.diffuse.x * light.color.x * light.power * nDotL;
+	                        c.y += intersectResult.material.diffuse.y * light.color.y * light.power * nDotL;
+	                        c.z += intersectResult.material.diffuse.z * light.color.z * light.power * nDotL;
+	                    
+	                        //specular blinn phong
+	                        
+	                        Vector3d lookFrom = new Vector3d();
+	                        lookFrom.sub(cam.from, intersectResult.p);
+	                        lookFrom.normalize();
+	                        
+	                        Vector3d h_bisector = new Vector3d();
+	                        h_bisector.add(lightFrom, lookFrom);
+	                        h_bisector.normalize();
+	                        
+	                        double nDotH = Math.pow(Math.max(0, intersectResult.n.dot(h_bisector)),intersectResult.material.shinyness);
+	                        
+	                        c.x += intersectResult.material.specular.x * light.color.x * light.power * nDotH;
+	                        c.y += intersectResult.material.specular.y * light.color.y * light.power * nDotH;
+	                        c.z += intersectResult.material.specular.z * light.color.z * light.power * nDotH;
+	                    }
+        			}
             	}
             	
             	// Here is an example of how to calculate the pixel value.
             	
-            	c.scale(1/render.samples);
             	c.clamp(0, 1);
             	
             	int r = (int)(255*c.x);
@@ -153,6 +166,27 @@ public class Scene {
         render.waitDone();
         
     }
+    
+    /**
+     * Generate a shadow ray from the point of intersection to the given light
+     * @param result
+     * @param light
+     * @param shadowRay
+     */
+	public static void generateShadowRay(IntersectResult result,Light light,Ray shadowRay) {
+		
+		Vector3d newEyePoint = new Vector3d(result.p);
+		Vector3d tempViewDirection = new Vector3d();
+		tempViewDirection.sub(light.from, result.p);
+		
+		shadowRay.viewDirection.set(tempViewDirection);
+		shadowRay.viewDirection.normalize();
+		
+		tempViewDirection.scale(1e-5);
+		newEyePoint.add(tempViewDirection);
+		
+		shadowRay.eyePoint.set(newEyePoint);
+	}
     
     /**
      * Generate a ray through pixel (i,j).
@@ -220,6 +254,15 @@ public class Scene {
 		
 		// TODO: Objective 5: check for shdows and use it in your lighting computation
 		
-		return false;
+		Vector3d fullShadowRay = new Vector3d();
+		fullShadowRay.sub(light.from,result.p);
+		
+		double light_t = fullShadowRay.x / shadowRay.viewDirection.x;
+		
+		if (shadowResult.t <= 0 ||light_t < 1e-9 || light_t < shadowResult.t) {
+			return false;
+		}
+		
+		return true;
 	}    
 }
