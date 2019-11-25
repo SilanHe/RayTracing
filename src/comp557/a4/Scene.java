@@ -53,7 +53,7 @@ public class Scene {
             	
             	
             	// used to debug
-            	if ((i == w/2-50) && j == h/2+80) {
+            	if ((i == w/2+32) && j == h/2+8) {
             		int x = 0;
             		x = 1;
             	}
@@ -72,7 +72,7 @@ public class Scene {
             		
             		// get closest intersection
                 	
-            		if (tempResult.t < intersectResult.t) {
+            		if (tempResult.t > 0 && tempResult.t < intersectResult.t) {
             			intersectResult.set(tempResult);
             		}
             	}
@@ -100,18 +100,19 @@ public class Scene {
 	                    generateShadowRay(intersectResult,light,shadowRay);
 	                    IntersectResult shadowResult = new IntersectResult();
 	                    
-	                    // test if the shadow ray hits light first
+	                    // get closest intersection of shadow light
 	                    for (Intersectable surface : surfaceList) {
 	                		IntersectResult tempResult = new IntersectResult();
 	                		surface.intersect(shadowRay, tempResult);
 	                		
 	                		// get closest intersection
 	                    	
-	                		if (tempResult.t < shadowResult.t) {
+	                		if (tempResult.t > 0 && tempResult.t < shadowResult.t) {
 	                			shadowResult.set(tempResult);
 	                		}
 	                	}
 	                    
+	                    // test if the shadow ray hits light first
 	                    if (!inShadow(intersectResult,light,null,shadowResult,shadowRay)) {
 		                    // diffuse lambertian
 	                        Vector3d lightFrom = new Vector3d();

@@ -38,8 +38,8 @@
 
     <node name="boxStack2" ref="boxStack"  rotation="0 24 0" translation="3 0 -3" />
     <node name="boxStack3" ref="boxStack"  rotation="0 87 0" translation="3 0  3" />
-    <node name="boxStack2" ref="boxStack"  rotation="0 4 0"  translation="-3 0 -3" />
-    <node name="boxStack3" ref="boxStack"  rotation="0 57 0" translation="-3 0  3" />
+    <node name="boxStack4" ref="boxStack"  rotation="0 4 0"  translation="-3 0 -3" />
+    <node name="boxStack5" ref="boxStack"  rotation="0 57 0" translation="-3 0  3" />
 
   </node>
 

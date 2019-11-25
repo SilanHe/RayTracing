@@ -43,7 +43,7 @@ public class Box extends Intersectable {
 		double tMin = Math.max(Math.max(tXLow,tYLow),tZLow);
 		double tMax = Math.min(Math.min(tXHigh,tYHigh),tZHigh);
 		
-		if (tMin <= tMax) {
+		if (tMin > 0 && tMin <= tMax) {
 			// there is intersection
 			result.t = tMin;
 			
