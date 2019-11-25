@@ -331,7 +331,14 @@ public class Parser {
 			if ( name.equalsIgnoreCase("camera") ) {
 				render.camera = Parser.createCamera(n);
     		}
-    	}	
+    	}
+    	// for jitter
+    	Node jitterAttr = dataNode.getAttributes().getNamedItem("jitter");
+		if ( jitterAttr != null ) {
+        	Scanner s = new Scanner( jitterAttr.getNodeValue());
+            render.jitter = s.nextInt(); 
+			s.close();
+		}
 		return render;
 	}
 	
