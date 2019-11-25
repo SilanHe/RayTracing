@@ -63,11 +63,6 @@ public class SceneNode extends Intersectable {
     	tmpResult.t = Double.POSITIVE_INFINITY;
     	tmpResult.n.set(0, 0, 1);
     	
-    	if (result.t < 0) {
-    		int x = 0;
-    		x = 1;
-    	}
-    	
         for ( Intersectable s : children ) {
             s.intersect( tmpRay, tmpResult );
             if ( tmpResult.t > 1e-9 && tmpResult.t < result.t ) {
@@ -80,6 +75,7 @@ public class SceneNode extends Intersectable {
         
         M.transform(result.p);
         M.transform(result.n);
+        result.n.normalize();
     }
     
 }

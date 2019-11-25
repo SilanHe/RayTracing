@@ -53,7 +53,7 @@ public class Scene {
             	
             	
             	// used to debug
-            	if ((i == w/2+32) && j == h/2+8) {
+            	if ((i == w/2+40) && j == h/2-15) {
             		int x = 0;
             		x = 1;
             	}
