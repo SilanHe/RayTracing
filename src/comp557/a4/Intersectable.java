@@ -1,5 +1,7 @@
 package comp557.a4;
 
+import javax.vecmath.Point3d;
+
 /**
  * Abstract class for an intersectable surface 
  */
@@ -22,5 +24,10 @@ public abstract class Intersectable {
 	 * @param result
 	 */
     public abstract void intersect(Ray ray, IntersectResult result);
+    
+    /**
+     * Get the bounding box for this particular object
+     */
+    public abstract void boundBox(Point3d min,Point3d max);
     
 }

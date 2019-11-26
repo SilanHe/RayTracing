@@ -32,6 +32,7 @@ public class Scene {
     	this.render = new Render();
     }
     
+    // ------------------------------------
     /**
      * my changes, grid super sampling
      */
@@ -43,8 +44,12 @@ public class Scene {
     		{0.85 ,0.15},
     };
     
-    private int jitter = 1;
-
+    /**
+     * Number of random samples used for the jitter
+     */
+    private int jitter_num = 1;
+    
+    //--------------------------------------
     
     /**
      * renders the scene
@@ -53,7 +58,7 @@ public class Scene {
     	
     	// check for jitter
     	if (this.render.jitter) {
-    		this.jitter = 20;
+    		this.jitter_num = 20;
     	}
  
         Camera cam = render.camera; 
@@ -74,7 +79,7 @@ public class Scene {
             	
             	Color3f c = new Color3f(render.bgcolor);
             	
-            	for (int aa = 0; aa < jitter; aa ++) {
+            	for (int aa = 0; aa < jitter_num; aa ++) {
             		
             	
 	                // TODO: Objective 1: generate a ray (use the generateRay method)
@@ -352,4 +357,19 @@ public class Scene {
 		
 		return true;
 	}    
+	
+	public void generateBoundingSurfaces() {
+		
+		BoundedSurface rootBoundedSurface = new BoundedSurface();
+		
+		// clone references from surfaceList into our new bounded surface
+		for (Intersectable intersectable : this.surfaceList) {
+			rootBoundedSurface.surfaces.add(intersectable);
+		}
+		
+		this.surfaceList.clear();
+		this.surfaceList.add(rootBoundedSurface);
+		rootBoundedSurface.generateBoundedSurfaces();
+		
+	}
 }
