@@ -42,12 +42,19 @@ public class Scene {
     		{0.15 ,0.85},
     		{0.85 ,0.15},
     };
+    
+    private int jitter = 1;
 
     
     /**
      * renders the scene
      */
     public void render(boolean showPanel) {
+    	
+    	// check for jitter
+    	if (this.render.jitter) {
+    		this.jitter = 20;
+    	}
  
         Camera cam = render.camera; 
         int w = cam.imageSize.width;
@@ -67,13 +74,18 @@ public class Scene {
             	
             	Color3f c = new Color3f(render.bgcolor);
             	
-            	for (int aa = 0; aa < render.samples; aa ++) {
+            	for (int aa = 0; aa < jitter; aa ++) {
             		
-            		double[] jitter_offset = {Math.random(),Math.random()};
             	
 	                // TODO: Objective 1: generate a ray (use the generateRay method)
 	            	Ray ray = new Ray();
-	            	generateRay(i,j,offset[aa],cam,ray);
+	            	if (aa > 0) {
+	            		double[] jitter_offset = {Math.random(),Math.random()};
+		            	generateRay(i,j,jitter_offset,cam,ray);
+	            	} else {
+	            		generateRay(i,j,offset[0],cam,ray);
+	            	}
+            		
 	            	
 	                // TODO: Objective 2: test for intersection with scene surfaces, get closest intersection
 	            	
@@ -93,6 +105,28 @@ public class Scene {
 	                // TODO: Objective 3: compute the shaded result for the intersection point (perhaps requiring shadow rays)
 	            	
 	            	if (intersectResult.t < Double.POSITIVE_INFINITY) {
+	            		
+	            		//set the lookFrom from the start
+	            		Vector3d lookFrom = new Vector3d();
+                        lookFrom.sub(cam.from, intersectResult.p);
+                        lookFrom.normalize();
+	            		
+	            		// TODO: Objective 11: mirror reflection
+	            		if (intersectResult.material.name.contains("mirror")) {
+                        	// do mirror reflection
+	                        
+	                        IntersectResult mirrorResult = new IntersectResult();
+	                        Vector3d lastLookFrom = new Vector3d();
+	                        
+                        	getReflectedPoint(intersectResult, lookFrom,1,mirrorResult,lastLookFrom);
+                        	
+                        	// if i find a point that the mirror may reflect
+                        	if (mirrorResult.t < Double.POSITIVE_INFINITY) {
+                        		intersectResult.set(mirrorResult);
+                            	lookFrom.set(lastLookFrom);
+                        	}
+                        	
+                        }
 	            		
 	            		// ambient
 	                    
@@ -135,11 +169,9 @@ public class Scene {
 		                        c.y += intersectResult.material.diffuse.y * light.color.y * light.power * nDotL;
 		                        c.z += intersectResult.material.diffuse.z * light.color.z * light.power * nDotL;
 		                    
-		                        //specular blinn phong
+		                        // lookFrom set before loop over the different lights and mirror check
 		                        
-		                        Vector3d lookFrom = new Vector3d();
-		                        lookFrom.sub(cam.from, intersectResult.p);
-		                        lookFrom.normalize();
+	                        	//specular blinn phong
 		                        
 		                        Vector3d h_bisector = new Vector3d();
 		                        h_bisector.add(lightFrom, lookFrom);
@@ -154,6 +186,7 @@ public class Scene {
 	        			}
 	            	}
             	}
+            	
             	
             	// Here is an example of how to calculate the pixel value.
 //            	c.scale(0.75f);
@@ -177,6 +210,48 @@ public class Scene {
         // wait for render viewer to close
         render.waitDone();
         
+    }
+    
+    public void getReflectedPoint(IntersectResult oldResult, Vector3d lookFrom,int level,IntersectResult newResult,Vector3d lastLookFrom) {
+    	
+    	Vector3d reflectedRayDirection = new Vector3d(oldResult.n);
+    	reflectedRayDirection.scale(2 * oldResult.n.dot(lookFrom));
+    	reflectedRayDirection.sub(lookFrom);
+    	
+    	// create our new reflected ray from the computed vector
+    	Ray reflectedRay = new Ray();
+    	reflectedRay.eyePoint.set(oldResult.p);
+    	reflectedRay.viewDirection.set(reflectedRayDirection);
+    	
+    	
+    	// find intersection with out new reflected ray
+    	IntersectResult tempIntersectResult = new IntersectResult();
+    	
+    	for (Intersectable surface : surfaceList) {
+    		IntersectResult tempResult = new IntersectResult();
+    		surface.intersect(reflectedRay, tempResult);
+    		
+    		// get closest intersection
+        	
+    		if (tempResult.t > 0 && tempResult.t < tempIntersectResult.t) {
+    			tempIntersectResult.set(tempResult);
+    		}
+    	}
+    	
+    	// exit conditions
+    	Vector3d newLookFrom = new Vector3d(reflectedRayDirection);
+		newLookFrom.scale(-1);
+    	
+    	if (tempIntersectResult.t < Double.POSITIVE_INFINITY && tempIntersectResult.material.name.contains("mirror") && level < 5) {
+    		// if the reflected ray intersects with another mirror, recursively call our function and pass color down
+    		// level limits the depth of the recursion
+    		getReflectedPoint(tempIntersectResult, newLookFrom,level + 1,newResult,lastLookFrom);
+    	} else {
+    		newResult.set(tempIntersectResult);
+    		lastLookFrom.set(newLookFrom);
+    	}
+    	
+    	
     }
     
     /**

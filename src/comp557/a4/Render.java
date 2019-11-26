@@ -60,9 +60,9 @@ public class Render extends WindowAdapter {
     private boolean done;
     
     /**
-     * Jitter, which determines the number of random points to sample
+     * Jitter, which determines if we are using jitter
      */
-    public int jitter;
+    public boolean jitter;
     
     /**
      * Default constructor. Creates a default camera and black background color.
@@ -76,7 +76,7 @@ public class Render extends WindowAdapter {
     	this.bgcolor = new Color3f( 0, 0, 0 );
     	this.panel = null;
     	this.samples = 1;
-    	this.jitter = 10;
+    	this.jitter = false;
     }
     
     /**

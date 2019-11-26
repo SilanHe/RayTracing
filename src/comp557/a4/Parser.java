@@ -336,7 +336,7 @@ public class Parser {
     	Node jitterAttr = dataNode.getAttributes().getNamedItem("jitter");
 		if ( jitterAttr != null ) {
         	Scanner s = new Scanner( jitterAttr.getNodeValue());
-            render.jitter = s.nextInt(); 
+            render.jitter = s.nextBoolean(); 
 			s.close();
 		}
 		return render;
