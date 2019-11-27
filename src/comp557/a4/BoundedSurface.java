@@ -72,7 +72,7 @@ public class BoundedSurface extends Intersectable {
 		
 		minBoundingBox(tmpMin,tmpMax);
 		
-		if (surfaces.size() < 5) {
+		if (surfaces.size() < 2) {
 			return;
 		}
 		
@@ -137,6 +137,7 @@ public class BoundedSurface extends Intersectable {
 			surfaces.addAll(tempSurfacesMiddle);
 			surfaces.add(higher);
 			surfaces.add(lower);
+			
 			
 			higher.generateBoundedSurfaces();
 			lower.generateBoundedSurfaces();
