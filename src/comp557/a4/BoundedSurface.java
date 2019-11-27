@@ -109,8 +109,91 @@ public class BoundedSurface extends Intersectable {
 	}
 	
 	public void generateBoundedSurfaces() {
+		// lets split the volumes right down the middle of the largest range axis
 		
+		if (surfaces.size() < 5) {
+			return;
+		}
+		
+		minBoundingBox(this.min,this.max);
+		
+		double lenX = max.x - min.x;
+		double lenY = max.y - min.y;
+		double lenZ = max.z - min.z;
+		
+		BoundedSurface lower = new BoundedSurface();
+		BoundedSurface higher = new BoundedSurface();
+		List<Intersectable> tempSurfacesMiddle = new ArrayList<Intersectable>();
+		
+		double maxLen = Math.max(lenX, Math.max(lenY, lenZ));
+		
+		
+		if (maxLen == lenX) {
+			
+			double midX;
+			midX = (max.x + min.x) / 2;
+			lower.max.set(midX, max.y, max.z);
+			lower.min.set(min.x,min.y,min.z);
+			
+			higher.max.set(max.x,max.y,max.z);
+			higher.min.set(midX,min.y,min.z);
+
+			
+		} else if (maxLen == lenY) {
+			
+			double midY;
+			midY = (max.y + min.y) / 2;
+			lower.max.set(max.z, midY, max.z);
+			lower.min.set(min.x,min.y,min.z);
+			
+			higher.max.set(max.x,max.y,max.z);
+			higher.min.set(min.x,midY,min.z);
+			
+		} else {
+			
+			double midZ;
+			midZ = (max.z + min.z) / 2;
+			lower.max.set(max.x, max.y, midZ);
+			lower.min.set(min.x,min.y,min.z);
+			
+			higher.max.set(max.x,max.y,max.z);
+			higher.min.set(min.x,min.y,midZ);
+			
+		}
+		
+		for (Intersectable s : surfaces) {
+			Point3d curMin = new Point3d();
+			Point3d curMax = new Point3d();
+			s.minBoundingBox(curMin, curMax);
+			
+			if (curMin.x > lower.max.x && curMin.y > lower.max.y && curMin.z > lower.max.z) {
+				higher.surfaces.add(s);
+			} else if (curMax.x < lower.max.x && curMin.y < lower.max.y && curMin.z < lower.max.z) {
+				lower.surfaces.add(s);
+			} else {
+				tempSurfacesMiddle.add(s);
+			}
+			
+			surfaces.clear();
+			surfaces.addAll(tempSurfacesMiddle);
+			surfaces.add(higher);
+			surfaces.add(lower);
+			
+			higher.generateBoundedSurfaces();
+			lower.generateBoundedSurfaces();
+		}
+	}
+
+	@Override
+	public void minBoundingBox(Point3d min, Point3d max) {
+		// TODO Auto-generated method stub
 		//get min point and max point
+		
+		if (this.max != null && this.min != null) {
+			min.set(this.min);
+			max.set(this.max);
+			return;
+		}
 		
 		for (Intersectable s : surfaces) {
 			
@@ -128,20 +211,8 @@ public class BoundedSurface extends Intersectable {
 			max.z = Math.max(tmpMax.z, max.z);
 		}
 		
-		// lets split the volumes right down the middle of the largest range axis
-		
-		double len_x = max.x - min.x;
-		double len_y = max.y - min.y;
-		double len_z = max.z - min.z;
-		
-		
-		
-	}
-
-	@Override
-	public void minBoundingBox(Point3d min, Point3d max) {
-		// TODO Auto-generated method stub
-		
+		this.min.set(min);
+		this.max.set(max);
 	}
 
 }

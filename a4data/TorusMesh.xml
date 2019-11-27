@@ -14,7 +14,7 @@
       <camera name="myCamera" from="0 4 4" to="0 0 0" up="0 1 0" fovy="45" width="256" height="256" />
   </render> 
   
-  <node name="root" >
+  <node name="root" jitter="true">
     <mesh name="myTorus" filename="a4data/torus.obj" >
       <material ref="red" />
     </mesh>

@@ -10,6 +10,10 @@ public abstract class Intersectable {
 	/** Material for this intersectable surface */
 	public Material material;
 	
+	public Point3d max;
+	
+	public Point3d min;
+	
 	/** 
 	 * Default constructor, creates the default material for the surface
 	 */

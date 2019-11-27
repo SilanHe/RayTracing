@@ -8,7 +8,7 @@
   <material name="blue" diffuse="0 0 1" specular="0.5 0.5 0.5" hardness="16" />
   <material name="black" diffuse="0 0 0" specular="0 0 0" hardness="0" />
   <material name="white" diffuse="1 1 1" specular="0 0 0" hardness="0" />
-  <material name="mirror" diffuse="0.5 0.5 0.5" specular="1 1 1" hardness="16" />
+  <material name="mirror" diffuse="0 0 0" specular="0.5 0.5 0.5" hardness="16" />
   
   <!-- render configuration -->
   <render bgcolor="0 0 0" output="TwoSpheresPlane.png" samples="12" >
