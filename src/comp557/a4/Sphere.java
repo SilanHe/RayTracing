@@ -95,5 +95,4 @@ public class Sphere extends Intersectable {
     	
     	
     }
-    
 }

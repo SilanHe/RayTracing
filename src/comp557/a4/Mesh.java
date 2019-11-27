@@ -21,7 +21,9 @@ public class Mesh extends Intersectable {
 	public Mesh() {
 		super();
 		this.soup = null;
-	}			
+	}
+	
+	private double epsilon = 1e-5;
 		
 	@Override
 	public void intersect(Ray ray, IntersectResult result) {
@@ -87,7 +89,7 @@ public class Mesh extends Intersectable {
 				double dotB = crossB.dot(faceNormal);
 				double dotC = crossC.dot(faceNormal);
 				
-				if (dotA > 0 && dotB > 0 && dotC > 0) {
+				if (dotA > -epsilon && dotB > -epsilon && dotC > -epsilon) {
 					// this is a valid intersection
 					if (curFaceT < result.t) {
 						result.p.set(intersectionPoint);

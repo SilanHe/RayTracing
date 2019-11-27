@@ -11,7 +11,7 @@
   <material name="yellow" diffuse="1 1 0" specular="0.8 0.8 0.9" hardness="32" />
   
   <!-- render configuration -->
-  <render bgcolor="0 0 0" output="BoxStacks.png" samples="4" >
+  <render bgcolor="0 0 0" output="BoxStacks.png" samples="100" jitter="true"> >
       <camera name="myCamera" from="6 10 15" to="0 0 0" up="0 1 0" fovy="45" width="512" height="512" />
   </render> 
   

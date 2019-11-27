@@ -10,7 +10,7 @@
   <material name="white" diffuse="1 1 1" specular="0 0 0" hardness="0" />
   
   <!-- render configuration -->
-  <render bgcolor="0 0 0" output="TwoSpheresPlane.png" samples="12" >
+  <render bgcolor="0 0 0" output="TwoSpheresPlane.png" samples="4" jitter="true"> >
     <camera name="myCamera" from="0 4 6" to="0 2 0" up="0 1 0" fovy="45" width="640" height="480" />
   </render> 
   
