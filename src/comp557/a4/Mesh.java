@@ -26,7 +26,7 @@ public class Mesh extends Intersectable {
 		this.soup = null;
 	}
 	
-	private double epsilon = 1e-9;
+	private double epsilon = 1e-5;
 		
 	@Override
 	public void intersect(Ray ray, IntersectResult result) {

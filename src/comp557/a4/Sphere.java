@@ -121,5 +121,4 @@ public class Sphere extends Intersectable {
 		this.max = new Point3d();
 		this.max.set(max);
 	}
-    
 }
