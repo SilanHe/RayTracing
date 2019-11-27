@@ -40,6 +40,7 @@ public class IntersectResult {
 	/**
 	 * Copy method.
 	 * @param other
+	 * @author silanhe
 	 */
 	public void set (IntersectResult other){
 		n.set( other.n );

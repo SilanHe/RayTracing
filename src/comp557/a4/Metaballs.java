@@ -2,6 +2,8 @@ package comp557.a4;
 
 import java.util.ArrayList;
 
+import javax.vecmath.Point3d;
+
 public class Metaballs extends Intersectable {
 	
 	ArrayList<Sphere> spheres = new ArrayList<Sphere>();
@@ -12,6 +14,12 @@ public class Metaballs extends Intersectable {
 	
 	@Override
 	public void intersect(Ray ray, IntersectResult result) {
+		
+	}
+
+	@Override
+	public void minBoundingBox(Point3d min, Point3d max) {
+		// TODO Auto-generated method stub
 		
 	}
 }

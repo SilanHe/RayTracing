@@ -27,7 +27,11 @@ public abstract class Intersectable {
     
     /**
      * Get the bounding box for this particular object
+     * @param min
+     * @param max
+     * 
+     * @author silanhe
      */
-    public abstract void boundBox(Point3d min,Point3d max);
+    public abstract void minBoundingBox(Point3d min,Point3d max);
     
 }

@@ -2,6 +2,7 @@ package comp557.a4;
 
 import javax.vecmath.Matrix3d;
 import javax.vecmath.Matrix4d;
+import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
 
 
@@ -26,6 +27,12 @@ public class Quadric extends Intersectable {
 	
 	@Override
 	public void intersect(Ray ray, IntersectResult result) {
+		
+	}
+
+	@Override
+	public void minBoundingBox(Point3d min, Point3d max) {
+		// TODO Auto-generated method stub
 		
 	}
 	

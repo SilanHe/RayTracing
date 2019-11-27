@@ -87,6 +87,19 @@ public class Box extends Intersectable {
 			result.material = this.material;
 			
 		}
+	}
+	/**
+	 * get the min and max point of this object for the tightest potential bounding box
+	 * @param min
+	 * @param max
+	 * 
+	 * @author silanhe
+	 */
+	@Override
+	public void minBoundingBox(Point3d min, Point3d max) {
+		// TODO Auto-generated method stub
+		min.set(this.min);
+		max.set(this.max);
 	}	
 
 }

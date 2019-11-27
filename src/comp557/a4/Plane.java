@@ -84,5 +84,12 @@ public class Plane extends Intersectable {
     	}
     	
     }
+
+
+	@Override
+	public void minBoundingBox(Point3d min, Point3d max) {
+		// TODO Auto-generated method stub
+		
+	}
     
 }

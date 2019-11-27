@@ -95,5 +95,19 @@ public class Sphere extends Intersectable {
     	
     	
     }
+
+	@Override
+	public void minBoundingBox(Point3d min, Point3d max) {
+		// TODO Auto-generated method stub
+		min.set(center);
+		min.x = min.x - 1;
+		min.y = min.y - 1;
+		min.z = min.z - 1;
+		
+		max.set(center);
+		max.x = max.x + 1;
+		max.y = max.y + 1;
+		max.y = max.y + 1;
+	}
     
 }

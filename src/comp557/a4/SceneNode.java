@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.vecmath.Matrix4d;
+import javax.vecmath.Point3d;
 
 import comp557.a4.IntersectResult;
 import comp557.a4.Intersectable;
@@ -77,5 +78,11 @@ public class SceneNode extends Intersectable {
         M.transform(result.n);
         result.n.normalize();
     }
+
+	@Override
+	public void minBoundingBox(Point3d min, Point3d max) {
+		// TODO Auto-generated method stub
+		
+	}
     
 }

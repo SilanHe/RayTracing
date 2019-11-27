@@ -3,7 +3,10 @@ package comp557.a4;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.vecmath.Point3d;
 import javax.vecmath.Vector3d;
+
+import comp557.a4.PolygonSoup.Vertex;
 
 public class Mesh extends Intersectable {
 	
@@ -98,6 +101,22 @@ public class Mesh extends Intersectable {
 					}
 				}
 			}
+		}
+	}
+
+	@Override
+	public void minBoundingBox(Point3d min, Point3d max) {
+		// TODO Auto-generated method stub
+		
+		for (Vertex v: this.soup.vertexList) {
+			
+			min.x = Math.min(v.p.x, min.x);
+			min.y = Math.min(v.p.y, min.y);
+			min.z = Math.min(v.p.z, min.z);
+			
+			max.x = Math.max(v.p.x, max.x);
+			max.y = Math.max(v.p.y, max.y);
+			max.z = Math.max(v.p.z, max.z);
 		}
 	}
 
