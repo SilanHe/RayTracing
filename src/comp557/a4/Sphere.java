@@ -114,9 +114,11 @@ public class Sphere extends Intersectable {
 		max.set(center);
 		max.x = max.x + 1;
 		max.y = max.y + 1;
-		max.y = max.y + 1;
+		max.z = max.z + 1;
 		
+		this.min = new Point3d();
 		this.min.set(min);
+		this.max = new Point3d();
 		this.max.set(max);
 	}
     

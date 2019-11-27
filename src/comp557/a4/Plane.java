@@ -22,6 +22,10 @@ public class Plane extends Intersectable {
      */
     public Plane() {
     	super();
+    	this.max = new Point3d();
+    	this.min = new Point3d();
+    	this.max.set(Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY);
+    	this.min.set(Double.NEGATIVE_INFINITY, Double.NEGATIVE_INFINITY, Double.NEGATIVE_INFINITY);
     }
 
         
@@ -89,7 +93,8 @@ public class Plane extends Intersectable {
 	@Override
 	public void minBoundingBox(Point3d min, Point3d max) {
 		// TODO Auto-generated method stub
-		
+		min.set(this.min);
+		max.set(this.max);
 	}
     
 }

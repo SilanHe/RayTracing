@@ -7,9 +7,6 @@ import javax.vecmath.Vector3d;
  * A simple box class. A box is defined by it's lower (@see min) and upper (@see max) corner. 
  */
 public class Box extends Intersectable {
-
-	public Point3d max;
-	public Point3d min;
 	
     /**
      * Default constructor. Creates a 2x2x2 box centered at (0,0,0)

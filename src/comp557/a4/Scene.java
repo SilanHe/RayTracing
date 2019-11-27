@@ -60,8 +60,8 @@ public class Scene {
             	for (int a = 1; a < render.samples * 2; a += 2) {
             		for (int b = 1; b < render.samples * 2; b+= 2) {
             			
-            			double center_i = 1/(render.samples * 2) * a;
-            			double center_j = 1/(render.samples * 2) * b;
+            			double center_i = 1./(render.samples * 2.) * (double)a;
+            			double center_j = 1./(render.samples * 2.) * (double)b;
             			
             			// TODO: Objective 1: generate a ray (use the generateRay method)
     	            	Ray ray = new Ray();
@@ -348,9 +348,8 @@ public class Scene {
 		BoundedSurface rootBoundedSurface = new BoundedSurface();
 		
 		// clone references from surfaceList into our new bounded surface
-		for (Intersectable intersectable : this.surfaceList) {
-			rootBoundedSurface.surfaces.add(intersectable);
-		}
+
+		rootBoundedSurface.surfaces.addAll(this.surfaceList);
 		
 		this.surfaceList.clear();
 		this.surfaceList.add(rootBoundedSurface);

@@ -105,7 +105,9 @@ public class SceneNode extends Intersectable {
 			max.z = Math.max(tmpMax.z, max.z);
 		}
 		
+		this.min = new Point3d();
 		this.min.set(min);
+		this.max = new Point3d();
 		this.max.set(max);
 		
 	}

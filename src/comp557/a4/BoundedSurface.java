@@ -21,11 +21,6 @@ public class BoundedSurface extends Intersectable {
 	 * List of Surfaces
 	 */
 	public List<Intersectable> surfaces = new ArrayList<Intersectable>();
-	
-	public Point3d max;
-	public Point3d min;
-	
-	private IntersectResult tmpResult = new IntersectResult();
 
 	/**
 	 * Axis Aligned Bounding Box : Default constructor.
@@ -34,9 +29,6 @@ public class BoundedSurface extends Intersectable {
 		// TODO Auto-generated constructor stub
 
 		this.material = null; // if material is null then bounding box
-		
-    	this.max = new Point3d();
-    	this.min = new Point3d();
 	}
 
 	@Override
@@ -61,48 +53,13 @@ public class BoundedSurface extends Intersectable {
 		
 		if (tMin > 0 && tMin <= tMax) {
 			// there is intersection
-			result.t = tMin;
-			
-			// find the point of intersection
-			Vector3d intersectionPoint = new Vector3d(ray.eyePoint);
-			Vector3d displacement = new Vector3d(ray.viewDirection);
-			displacement.scale(result.t);
-			
-			intersectionPoint.add(displacement);
-			
-			// find the normal vector of the intersection point with respect to the surface
-			Vector3d normal = new Vector3d();
-			
-			if (tMin == tXLow) {
-				if (displacement.x > 0) {
-					normal.set(-1, 0, 0);
-				} else {
-					normal.set(1, 0, 0);
-				}
-				
-			} else if (tMin == tYLow) {
-				if (displacement.y > 0) {
-					normal.set(0, -1, 0);
-				} else {
-					normal.set(0, 1, 0);
-				}
-			} else {
-				if (displacement.z > 0) {
-					normal.set(0, 0, -1);
-				} else {
-					normal.set(0, 0, 1);
-				}
-			}
-			
 			// check for intersection in child surfaces
 			
 			for (Intersectable s : surfaces) {
-				
+				IntersectResult tmpResult = new IntersectResult();
 				s.intersect( ray, tmpResult );
 	            if ( tmpResult.t > 1e-9 && tmpResult.t < result.t ) {
-
 	            	result.set(tmpResult);
-	            
 	            }
 			}
 		}
@@ -110,12 +67,14 @@ public class BoundedSurface extends Intersectable {
 	
 	public void generateBoundedSurfaces() {
 		// lets split the volumes right down the middle of the largest range axis
+		Point3d tmpMin = new Point3d();
+		Point3d tmpMax = new Point3d();
+		
+		minBoundingBox(tmpMin,tmpMax);
 		
 		if (surfaces.size() < 5) {
 			return;
 		}
-		
-		minBoundingBox(this.min,this.max);
 		
 		double lenX = max.x - min.x;
 		double lenY = max.y - min.y;
@@ -210,8 +169,9 @@ public class BoundedSurface extends Intersectable {
 			max.y = Math.max(tmpMax.y, max.y);
 			max.z = Math.max(tmpMax.z, max.z);
 		}
-		
+		this.min = new Point3d();
 		this.min.set(min);
+		this.max = new Point3d();
 		this.max.set(max);
 	}
 
