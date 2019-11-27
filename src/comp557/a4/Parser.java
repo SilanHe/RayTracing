@@ -466,6 +466,7 @@ public class Parser {
 				mesh.soup = other.soup;
 			}
         }
+        mesh.minBoundingBox();
         mesh.material = parseMaterial(dataNode, "material");
     	return mesh;    	
 	}
