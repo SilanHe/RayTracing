@@ -36,6 +36,7 @@ public abstract class Intersectable {
      * 
      * @author silanhe
      */
-    public abstract void minBoundingBox(Point3d min,Point3d max);
+
+	public abstract void minBoundingBox();
     
 }

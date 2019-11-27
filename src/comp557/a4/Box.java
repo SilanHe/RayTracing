@@ -93,11 +93,7 @@ public class Box extends Intersectable {
 	 * @author silanhe
 	 */
 	@Override
-	public void minBoundingBox(Point3d min, Point3d max) {
-		
-		// TODO Auto-generated method stub
-		min.set(this.min);
-		max.set(this.max);
+	public void minBoundingBox() {
 	}	
 
 }

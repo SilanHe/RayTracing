@@ -129,15 +129,12 @@ public class Mesh extends Intersectable {
 	}
 
 	@Override
-	public void minBoundingBox(Point3d min, Point3d max) {
+	public void minBoundingBox() {
 		
 		// TODO Auto-generated method stub
 		
-		if (this.max != null && this.min != null) {
-			min.set(this.min);
-			max.set(this.max);
-			return;
-		}
+		min = new Point3d();
+		max = new Point3d();
 		
 		for (Vertex v: this.soup.vertexList) {
 			
@@ -150,10 +147,6 @@ public class Mesh extends Intersectable {
 			max.z = Math.max(v.p.z, max.z);
 		}
 		
-		this.min = new Point3d();
-		this.min.set(min);
-		this.max = new Point3d();
-		this.max.set(max);
 		
 	}
 

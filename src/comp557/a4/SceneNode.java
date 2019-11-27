@@ -80,36 +80,30 @@ public class SceneNode extends Intersectable {
     }
 
 	@Override
-	public void minBoundingBox(Point3d min, Point3d max) {
+	public void minBoundingBox() {
 		// TODO Auto-generated method stub
 		
-		if (this.max != null && this.min != null) {
-			min.set(this.min);
-			max.set(this.max);
-			return;
-		}
+		min = new Point3d();
+		max = new Point3d();
 		
 		for (Intersectable s : children) {
 			
-			Point3d tmpMin  = new Point3d();
-			Point3d tmpMax  = new Point3d();
+			s.minBoundingBox();
 			
-			s.minBoundingBox(tmpMin, tmpMax);
+			Point3d tmpMin = new Point3d(s.min);
+			M.transform(tmpMin);
 			
 			min.x = Math.min(tmpMin.x, min.x);
 			min.y = Math.min(tmpMin.y, min.y);
 			min.z = Math.min(tmpMin.z, min.z);
 			
+			Point3d tmpMax = new Point3d(s.max);
+			M.transform(tmpMax);
+			
 			max.x = Math.max(tmpMax.x, max.x);
 			max.y = Math.max(tmpMax.y, max.y);
 			max.z = Math.max(tmpMax.z, max.z);
 		}
-		
-		this.min = new Point3d();
-		this.min.set(min);
-		this.max = new Point3d();
-		this.max.set(max);
-		
 	}
     
 }

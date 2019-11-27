@@ -31,9 +31,10 @@ public class Quadric extends Intersectable {
 	}
 
 	@Override
-	public void minBoundingBox(Point3d min, Point3d max) {
+	public void minBoundingBox() {
 		// TODO Auto-generated method stub
-		
+		min = new Point3d();
+		max = new Point3d();
 	}
 	
 }
