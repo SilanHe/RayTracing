@@ -25,6 +25,8 @@ public class Scene {
     
     /** The ambient light colour */
     public Color3f ambient = new Color3f();
+    
+    public CubeMap background = null;
 
     /** 
      * Default constructor.
@@ -36,7 +38,6 @@ public class Scene {
     /**
      * my changes, fast poisson disk for depth of field like in a2
      */
-    static FastPoissonDisk  fastPoissonDisk;
 
     
     /**
@@ -45,7 +46,6 @@ public class Scene {
     public void render(boolean showPanel) {
  
         Camera cam = render.camera;
-        this.fastPoissonDisk = new FastPoissonDisk(cam.lensRadius);
         int w = cam.imageSize.width;
         int h = cam.imageSize.height;
         
@@ -75,10 +75,10 @@ public class Scene {
 		            	Ray ray = new Ray();
 		            	if (this.render.jitter) {
 		            		double[] jitter_offset = {sample_offset[0] + 0.5 + Math.random() * 0.01 - 0.005,sample_offset[1] + 0.5 + Math.random() * 0.01 - 0.005};
-			            	generateRay(i,j,jitter_offset,cam,ray,dofSample);
+			            	generateRay(i,j,jitter_offset,cam,ray);
 		            	} else {
 		            		double[] offset = {0.5,0.5};
-		            		generateRay(i,j,offset,cam,ray,dofSample);
+		            		generateRay(i,j,offset,cam,ray);
 		            	}
 	            	
 		                // TODO: Objective 2: test for intersection with scene surfaces, get closest intersection
@@ -98,6 +98,7 @@ public class Scene {
 		            	
 		                // TODO: Objective 3: compute the shaded result for the intersection point (perhaps requiring shadow rays)
 		            	
+		            	// if we hit an object
 		            	if (intersectResult.t < Double.POSITIVE_INFINITY) {
 		            		
 		            		//set the lookFrom from the start
@@ -182,6 +183,10 @@ public class Scene {
 			                        c.z += specular.z * intersectResult.material.specular.z * light.color.z * light.power * nDotH;
 			        			}
 			            	}
+		            	} else {
+		            		// if we dont hit any object, map to background cube mapping
+		            		
+		            		
 		            	}
 	            	}
             	}
@@ -306,12 +311,15 @@ public class Scene {
      * @param cam The camera.
      * @param ray Contains the generated ray.
      */
-	public static void generateRay(final int i, final int j, final double[] offset, final Camera cam, Ray ray,int sample) {
+	public static void generateRay(final int i, final int j, final double[] offset, final Camera cam, Ray ray) {
 		
 		// TODO: Objective 1: generate rays given the provided parameters
 		
 		Point2d p = new Point2d();
-		fastPoissonDisk.get(p, sample, cam.cameraSamples);
+		
+		// generate random sample in square
+		p.x = Math.random() * cam.lensRadius - cam.lensRadius/2;
+		p.y = Math.random() * cam.lensRadius - cam.lensRadius/2;
 		
 		// set d to 1 for simplicity
 		
@@ -336,10 +344,14 @@ public class Scene {
 		vertical.normalize();
 		
 		// for depth of field blur
-		Vector3d verticalSample = new Vector3d(vertical);
-		Vector3d horizontalSample = new Vector3d(horizontal);
-		verticalSample.scale(p.y);
-		horizontalSample.scale(p.x);
+		Vector3d verticalSample = new Vector3d();
+		Vector3d horizontalSample = new Vector3d();
+		if (cam.cameraSamples > 1) {
+			verticalSample.set(vertical);
+			horizontalSample.set(horizontal);
+			verticalSample.scale(p.y);
+			horizontalSample.scale(p.x);
+		}
 		
 		// scale the vertical and horizontal offset
 		vertical.scale(v);
@@ -350,19 +362,18 @@ public class Scene {
 		rayDirection.set(lookTowards);
 		rayDirection.normalize();
 		
-		//adding the offset to the direction of the ray
-		rayDirection.scale(cam.focusDistance);
-		rayDirection.sub(verticalSample);
-		rayDirection.sub(horizontalSample);
-		
-		rayDirection.normalize();
-		rayDirection.add(horizontal);
-		rayDirection.add(vertical);
-		rayDirection.normalize();
-		
 		Vector3d tempFrom = new Vector3d(cam.from);
 		tempFrom.add(verticalSample);
 		tempFrom.add(horizontalSample);
+		
+		//adding the offset to the direction of the ray
+		rayDirection.scale(cam.focusDistance); // this was normalized so we scale to focus plane
+		rayDirection.sub(verticalSample);
+		rayDirection.sub(horizontalSample);
+		rayDirection.add(horizontal);
+		rayDirection.add(vertical);
+		
+		rayDirection.normalize();
 		
 		// update ray
 		

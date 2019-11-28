@@ -30,7 +30,7 @@ public class Camera {
     public Dimension imageSize = new Dimension(640,480);
     
     public double focusDistance = 1;
-    public double lensRadius = 0;
+    public double lensRadius = 0.001;
     public int cameraSamples = 1;
 
     /**

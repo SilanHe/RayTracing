@@ -1,5 +1,6 @@
 package comp557.a4;
 
+import java.io.IOException;
 import java.util.Locale;
 import java.util.Scanner;
 
@@ -63,6 +64,16 @@ public class Parser {
             } else if ( nodeName.equalsIgnoreCase( "mesh" ) ) {
             	Mesh mesh = Parser.createMesh(n);
             	scene.surfaceList.add( mesh );
+            } else if (nodeName.equalsIgnoreCase( "cubemap" )) {
+            	CubeMap cubeMap = null;
+				try {
+					cubeMap = Parser.createCubeMap(n);
+					
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				scene.background = cubeMap;
             }
         }
         return scene;
@@ -166,6 +177,25 @@ public class Parser {
 		sceneNode.Minv.invert(sceneNode.M);		
 		sceneNode.material = parseMaterial(dataNode, "material");					
 		return sceneNode;	
+	}
+	
+	/**
+	 * Create Cube Map
+	 * @throws IOException 
+	 */
+	public static CubeMap createCubeMap(Node dataNode) throws IOException {
+		CubeMap cubeMap = new CubeMap();
+		
+		Node filesAttr = dataNode.getAttributes().getNamedItem("files");
+		Scanner s = new Scanner( filesAttr.getNodeValue());
+		for (int i = 0; i < 6 ; i++) {
+			String fileName = s.next();
+			
+			cubeMap.images[i]= TargaReader.getImage(fileName);
+		}
+        s.close();    	
+		
+		return cubeMap;
 	}
 	
 	/**

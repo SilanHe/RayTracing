@@ -18,7 +18,7 @@ public class IntersectResult {
 	public Material material = null;
 		
 	/** Parameter on the ray giving the position of the intersection */
-	public double t = Double.POSITIVE_INFINITY; 
+	public double t = Double.POSITIVE_INFINITY;
 	
 	/**
 	 * Default constructor.
