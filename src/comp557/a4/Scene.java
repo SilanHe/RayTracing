@@ -236,7 +236,7 @@ public class Scene {
     	Vector3d newLookFrom = new Vector3d(reflectedRayDirection);
 		newLookFrom.scale(-1);
     	
-    	if (tempIntersectResult.t < Double.POSITIVE_INFINITY && tempIntersectResult.material.name.contains("mirror") && level < 5) {
+    	if (tempIntersectResult.t < Double.POSITIVE_INFINITY && tempIntersectResult.material.name.contains("mirror") && level < 10) {
     		// if the reflected ray intersects with another mirror, recursively call our function and pass color down
     		// level limits the depth of the recursion
     		glossyReflection.x = glossyReflection.x * oldResult.material.specular.x;
