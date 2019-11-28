@@ -251,6 +251,18 @@ public class Parser {
         Node heightAttr = dataNode.getAttributes().getNamedItem("height");
         if ( heightAttr != null ) {
             camera.imageSize.height = Integer.parseInt( heightAttr.getNodeValue() );        	
+        } 
+        Node focusDistanceAttr = dataNode.getAttributes().getNamedItem("focusDistance");
+        if ( focusDistanceAttr != null ) {
+            camera.focusDistance = Double.parseDouble(focusDistanceAttr.getNodeValue());        	
+        }
+        Node lensRadiusAttr = dataNode.getAttributes().getNamedItem("radius");
+        if ( lensRadiusAttr != null ) {
+            camera.lensRadius = Double.parseDouble(lensRadiusAttr.getNodeValue());        	
+        }
+        Node cameraSamplesAttr = dataNode.getAttributes().getNamedItem("cameraSamples");
+        if ( cameraSamplesAttr != null ) {
+            camera.cameraSamples = Integer.parseInt(cameraSamplesAttr.getNodeValue());        	
         }
         
 		return camera;
@@ -293,6 +305,18 @@ public class Parser {
 	    	Node hardnessAttr = dataNode.getAttributes().getNamedItem("hardness");
 	    	if ( hardnessAttr != null ) {
 	    		material.shinyness = Float.parseFloat( hardnessAttr.getNodeValue() );
+	    	}
+	    	Node blurWidthAttr = dataNode.getAttributes().getNamedItem("blurWidth");
+	    	if ( blurWidthAttr != null ) {
+	    		material.blurWidth = Double.parseDouble( blurWidthAttr.getNodeValue() );
+	    	}
+	    	Node mirrorAttr = dataNode.getAttributes().getNamedItem("mirror");
+	    	if ( mirrorAttr != null ) {
+	    		material.mirror = Boolean.parseBoolean( mirrorAttr.getNodeValue() );
+	    	}
+	    	Node glossyAttr = dataNode.getAttributes().getNamedItem("glossy");
+	    	if ( glossyAttr != null ) {
+	    		material.glossy = Boolean.parseBoolean( glossyAttr.getNodeValue() );
 	    	}
 		}
 		return material;

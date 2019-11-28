@@ -28,6 +28,10 @@ public class Camera {
     
     /** The rendered image size */
     public Dimension imageSize = new Dimension(640,480);
+    
+    public double focusDistance = 1;
+    public double lensRadius = 0;
+    public int cameraSamples = 1;
 
     /**
      * Default constructor
