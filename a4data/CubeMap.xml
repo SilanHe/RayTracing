@@ -3,14 +3,23 @@
   <!-- define camera,material,lights here -->
   <light name="myLight" color="1 1 1" from="0 5 5" power="1.0" type="point" />
   <material name="red" diffuse="1 0 0" specular="0.8 0.8 0.8" hardness="32" />
+  <material name="glossyGlazedMirror" diffuse="0.5 0.5 0.5" specular="0.5 0.5 0.5" hardness="0" mirror="true" glossy="true" blurWidth="0.01"/>
+  <material name="pureMirror" diffuse="1 1 1" specular="1 1 1" hardness="0" mirror="true"/>
   
   <!-- render configuration -->
-  <render bgcolor="0 0 0" output="Sphere.png" samples="2" jitter="true">
-      <camera name="myCamera" from="0 10 0" to="0 0 -10" up="0 1 0" fovy="45" width="512" height="512" />
+  <render bgcolor="0 0 0" output="Sphere.png" samples="50" jitter="true">
+      <camera name="myCamera" from="0 4 0" to="0 0 -10" up="0 1 0" fovy="45" width="512" height="512" />
   </render> 
+  
+  <cubemap files="a4data/bluefreeze_bk.tga a4data/bluefreeze_dn.tga a4data/bluefreeze_ft.tga a4data/bluefreeze_lf.tga a4data/bluefreeze_rt.tga a4data/bluefreeze_up.tga" min="-1 -1 -1" max="1 1 1"></cubemap>
   
   <!-- scene objects -->
   <node name="root" >
-  	<cubemap files="bluefreeze_bk.tga bluefreeze_dn.tga bluefreeze_ft.tga bluefreeze_lf.tga bluefreeze_rt.tga bluefreeze_up.tga" min="-1 0 -1" max="1 2 1"></cubemap>
+  	<sphere center="0 1 -5" radius="1" >
+		<material ref="pureMirror" />
+	  </sphere>
+  	<plane coeffs="0 1 0 0" >
+		<material ref="glossyGlazedMirror" />
+	  </plane>  
   </node>
 </scene>

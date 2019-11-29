@@ -39,6 +39,11 @@ public class Ray {
 		this.viewDirection.set(viewDirection);
 	}
 	
+	public void set(Ray ray) {
+		this.eyePoint.set(ray.eyePoint);
+		this.viewDirection.set(ray.viewDirection);
+	}
+	
 	/**
 	 * Computes the location of a point along the ray using parameter t.
 	 * @param t

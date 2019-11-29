@@ -8,6 +8,7 @@ import java.io.IOException;
 
 public class TargaReader {
     public static BufferedImage getImage(String fileName) throws IOException {
+//    	System.out.println("Working Directory = " + System.getProperty("user.dir"));
         File f = new File(fileName);
         byte[] buf = new byte[(int)f.length()];
         BufferedInputStream bis = new BufferedInputStream(new FileInputStream(f));

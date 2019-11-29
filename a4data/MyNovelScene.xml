@@ -9,19 +9,20 @@
   <material name="black" diffuse="0 0 0" specular="0 0 0" hardness="0" />
   <material name="white" diffuse="1 1 1" specular="0 0 0" hardness="0" />
   
-  <material name="glossyGlazedMirror" diffuse="0.5 0.5 0.5" specular="0.5 0.5 0.5" hardness="0" mirror="true" glossy="true" blurWidth="0.05"/>
-  <material name="pureMirror" diffuse="0 0 0" specular="0 0 0" hardness="0" mirror="true"/>
+  <material name="glossyGlazedMirror" diffuse="0.5 0.5 0.5" specular="0.5 0.5 0.5" hardness="0" mirror="true" glossy="true" blurWidth="0.02"/>
+  <material name="pureMirror" diffuse="1 1 1" specular="1 1 1" hardness="0" mirror="true"/>
   
   <material name="orange" diffuse="1 0.5 0" specular="0.8 0.8 0.9" hardness="32" />
   <material name="yellow" diffuse="1 1 0" specular="0.8 0.8 0.9" hardness="32" />
   
   <!-- render configuration -->
-  <render bgcolor="0 0 0" output="MyNovelScene.png" samples="50" jitter="true" >
-    <camera name="myCamera" from="0 4 8" to="0 2 0" up="0 1 0" fovy="45" width="640" height="480" focusDistance="8.8" radius="0.1" cameraSamples="25"/>
+  <render bgcolor="0 0 0" output="MyNovelScene.png" samples="25" jitter="true" >
+    <camera name="myCamera" from="0 4 8" to="0 2 0" up="0 1 0" fovy="45" width="640" height="480"/> <!-- focusDistance="8" radius="0.2" cameraSamples="25" -->/>
   </render> 
   
+  <cubemap files="a4data/bluefreeze_bk.tga a4data/bluefreeze_dn.tga a4data/bluefreeze_ft.tga a4data/bluefreeze_lf.tga a4data/bluefreeze_rt.tga a4data/bluefreeze_up.tga" min="-1 -1 -1" max="1 1 1"></cubemap>
+  
   <!-- scene objects -->
-    
     
   <node name="root" >
   	<node name="boxStack" rotation="0 30 0">
@@ -46,6 +47,8 @@
     <node name="boxStack3" ref="boxStack"  rotation="0 87 0" translation="4 0  4" />
     <node name="boxStack4" ref="boxStack"  rotation="0 4 0"  translation="-4 0 -4" />
     <node name="boxStack5" ref="boxStack"  rotation="0 57 0" translation="-4 0  4" />
+    <node name="boxStack6" ref="boxStack"  rotation="0 57 0" translation="6 1  6" />
+    <node name="boxStack7" ref="boxStack"  rotation="0 57 0" translation="-4 0  -7" />
     
 	  <sphere center="6 4 -6" radius="2" >
 		<material ref="pureMirror" />

@@ -64,7 +64,7 @@ public class Parser {
             } else if ( nodeName.equalsIgnoreCase( "mesh" ) ) {
             	Mesh mesh = Parser.createMesh(n);
             	scene.surfaceList.add( mesh );
-            } else if (nodeName.equalsIgnoreCase( "cubemap" )) {
+            } else if ( nodeName.equalsIgnoreCase( "cubemap" )) {
             	CubeMap cubeMap = null;
 				try {
 					cubeMap = Parser.createCubeMap(n);
