@@ -27,6 +27,8 @@ public class Scene {
     public Color3f ambient = new Color3f();
     
     public CubeMap background = null;
+    
+    public FastPoissonDisk fpd = null;
 
     /** 
      * Default constructor.

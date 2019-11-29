@@ -3,11 +3,11 @@
   <!-- define camera,material,lights here -->
   <light name="myLight" color="1 1 1" from="0 5 5" power="1.0" type="point" />
   <material name="red" diffuse="1 0 0" specular="0.8 0.8 0.8" hardness="32" />
-  <material name="glossyGlazedMirror" diffuse="0.5 0.5 0.5" specular="0.5 0.5 0.5" hardness="0" mirror="true" glossy="true" blurWidth="0.01"/>
+  <material name="glossyGlazedMirror" diffuse="0.5 0.5 0.5" specular="0.5 0.5 0.5" hardness="0" mirror="true" glossy="true" blurWidth="0.05"/>
   <material name="pureMirror" diffuse="1 1 1" specular="1 1 1" hardness="0" mirror="true"/>
   
   <!-- render configuration -->
-  <render bgcolor="0 0 0" output="Sphere.png" samples="50" jitter="true">
+  <render bgcolor="0 0 0" output="CubeMap.png" samples="50" jitter="true">
       <camera name="myCamera" from="0 4 0" to="0 0 -10" up="0 1 0" fovy="45" width="512" height="512" />
   </render> 
   

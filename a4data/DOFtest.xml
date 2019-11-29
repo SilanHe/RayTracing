@@ -10,7 +10,7 @@
   <material name="green" diffuse="0 1 0" specular="0.5 0.5 0.5" hardness="16" />
   
   <!-- render configuration -->
-  <render bgcolor="0 0 0" output="TorusMesh.png" >
+  <render bgcolor="0 0 0" output="DOFtest.png" >
       <camera name="myCamera" from="0 4 4" to="0 0 0" up="0 1 0" fovy="45" width="256" height="256" focusDistance="4" radius="0.1" cameraSamples="25"/>
   </render> 
   

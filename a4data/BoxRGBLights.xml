@@ -7,7 +7,7 @@
   <material name="white" diffuse="1 1 1" specular="0 0 0" hardness="0" />
   
   <!-- render configuration -->
-  <render bgcolor="1 1 1" output="BoxRGBLights.png">
+  <render bgcolor="1 1 1" output="BoxRGBLights.png" samples="50" jitter="true">
     <camera name="myCamera" from="3 3 3" to="0 0 0" up="0 1 0" fovy="45" width="512" height="512" />
   </render> 
   
